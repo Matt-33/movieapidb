@@ -1,45 +1,20 @@
-import React, { useEffect, useState } from "react";
-import api from "./api";
-import MovieCard from "./components/MovieCard";
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import Home from "./components/Home";
+import MovieDetail from "./components/MovieDetail";
 
 const App = () => {
-  const [movies, setMovies] = useState([]);
-  const [query, setQuery] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-
-  useEffect(() => {
-    api
-      .get("/movie/now_playing")
-      .then((response) => setMovies(response.data.results))
-      .catch((error) => console.error(error));
-  }, []);
-
-  const handleSearch = (e) => {
-    e.preventDefault();
-    api
-      .get("/search/movie", { params: { query } })
-      .then((response) => setSearchResults(response.data.results))
-      .catch((error) => console.error(error));
-  };
-
   return (
-    <div>
-      <h1>TMDB Movie App</h1>
-      <form onSubmit={handleSearch}>
-        <input
-          type="text"
-          placeholder="Search for a movie..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-        />
-        <button type="submit">Search</button>
-      </form>
-      <div className="movies-container">
-        {(searchResults.length > 0 ? searchResults : movies).map((movie) => (
-          <MovieCard key={movie.id} movie={movie} />
-        ))}
-      </div>
-    </div>
+    <Router>
+      <nav>
+        <Link to="/">Accueil</Link>
+      </nav>
+
+      <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/movie/:id" element={<MovieDetail />} />
+      </Routes>
+    </Router>
   );
 };
 
